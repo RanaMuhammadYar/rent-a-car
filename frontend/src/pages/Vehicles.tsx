@@ -263,8 +263,9 @@ const Vehicles: React.FC = () => {
               label="Daily Rate ($)" 
               type="number"
               required
-              value={formData.daily_rate}
-              onChange={(e) => setFormData({ ...formData, daily_rate: parseFloat(e.target.value) })}
+              placeholder="0"
+              value={formData.daily_rate === 0 ? '' : formData.daily_rate}
+              onChange={(e) => setFormData({ ...formData, daily_rate: e.target.value === '' ? 0 : parseFloat(e.target.value) })}
             />
             <div className="space-y-1">
               <label className="block text-sm font-medium text-slate-400">Status</label>

@@ -142,10 +142,30 @@ const Bookings: React.FC = () => {
     }
   };
 
-  const filteredBookings = bookings.filter(b => 
-    b.Customer?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    b.Vehicle?.make.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBookings = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+    return bookings.filter(b => {
+      const customerName = b.Customer?.name.toLowerCase() || '';
+      const vehicleMake = b.Vehicle?.make.toLowerCase() || '';
+      const vehicleModel = b.Vehicle?.model.toLowerCase() || '';
+      
+      const startDate = new Date(b.start_date);
+      const startMonthName = months[startDate.getMonth()];
+      const startFormatted = `${b.start_date} ${startMonthName}`;
+
+      const endDate = new Date(b.end_date);
+      const endMonthName = months[endDate.getMonth()];
+      const endFormatted = `${b.end_date} ${endMonthName}`;
+
+      return customerName.includes(query) ||
+             vehicleMake.includes(query) ||
+             vehicleModel.includes(query) ||
+             startFormatted.toLowerCase().includes(query) ||
+             endFormatted.toLowerCase().includes(query);
+    });
+  }, [bookings, searchQuery]);
 
   const columns = [
     {
